@@ -5,23 +5,17 @@ namespace NL.Event
     public abstract class GameEventListenerUnityEventBase<T> : GameEventListenerBase<T>
     {
         [SerializeField]
+        protected GameEventBase<T> @event;
+        [SerializeField]
         protected UnityEvent<T> response;
-
-        private void OnEnable()
-        {
-            @event.RegisterListener(this);
-        }
-
-        private void OnDisable()
-        {
-
-            @event.UnregisterListener(this);
-        }
-
         public override void OnEventRaised(T value)
         {
             base.OnEventRaised(value);
             response.Invoke(value);
+        }
+        protected override GameEventBase<T> GetEvent()
+        {
+            return @event;
         }
     }
 }

@@ -2,26 +2,23 @@
 namespace NL.Event
 {
     public abstract class GameEventListenerBase<T> : MonoBehaviour
-    {
-        [SerializeField]
-        protected GameEventBase<T> @event;
-
+    {        
         private void OnEnable()
         {
-            @event.RegisterListener(this);
+            GetEvent().RegisterListener(this);
         }
 
         private void OnDisable()
         {
 
-            @event.UnregisterListener(this);
+            GetEvent().UnregisterListener(this);
         }
-
+        protected abstract GameEventBase<T> GetEvent();
         public virtual void OnEventRaised(T value) 
         {
-            if (@event.outputLog)
+            if (GetEvent().outputLog)
             {
-                Debug.Log($"Listener '{gameObject.name}' in scene '{gameObject.scene.name}' with Instance ID {GetInstanceID()} responded to event {@event.name}.");
+                Debug.Log($"Listener '{gameObject.name}' in scene '{gameObject.scene.name}' with Instance ID {GetInstanceID()} responded to event {GetEvent().name}.");
             }
         }
     }

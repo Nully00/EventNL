@@ -17,5 +17,10 @@ namespace NL.Event
                 audioSource.volume = value;
             }
         }
+
+        protected override GameEventBase<float> GetEvent()
+        {
+            return _onChangeVolume;
+        }
     }
 }
