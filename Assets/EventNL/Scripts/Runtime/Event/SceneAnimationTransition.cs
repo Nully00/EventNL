@@ -21,6 +21,7 @@ namespace NL.Event
 
         private IEnumerator AnimationImage()
         {
+            _animationImage.enabled = true;
             foreach (var sprite in _animationSprites)
             {
                 _animationImage.sprite = sprite;
