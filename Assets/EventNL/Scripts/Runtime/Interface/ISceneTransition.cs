@@ -1,6 +1,6 @@
 ﻿namespace NL.Event
 {
-    interface ISceneTransition
+    public interface ISceneTransition
     {
         void To(string sceneName);
     }

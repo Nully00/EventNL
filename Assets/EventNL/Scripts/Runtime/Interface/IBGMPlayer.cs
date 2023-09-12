@@ -1,6 +1,6 @@
 ﻿namespace NL.Event
 {
-    interface IBGMPlayer
+    public interface IBGMPlayer
     {
         void Play(string bgmName, bool looping = true);
         void Stop();
