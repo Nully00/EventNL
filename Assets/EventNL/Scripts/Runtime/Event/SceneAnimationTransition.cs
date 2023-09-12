@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace NL.Event
 {
-    public class SceneAnimationTransition : MonoBehaviour
+    public class SceneAnimationTransition : MonoBehaviour, ISceneTransition
     {
         [SerializeField]
         private string _sceneName;
@@ -16,9 +16,12 @@ namespace NL.Event
         private float _animationInterval = 0.1f;
         public void To()
         {
-            StartCoroutine(SceneTransitionService.To(_sceneName, AnimationImage()));
+            To(_sceneName);
         }
-
+        public void To(string sceneName)
+        {
+            StartCoroutine(SceneTransitionService.To(sceneName, AnimationImage()));
+        }
         private IEnumerator AnimationImage()
         {
             _animationImage.enabled = true;
