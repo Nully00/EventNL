@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 namespace NL.Event
@@ -18,14 +19,31 @@ namespace NL.Event
             }
         }
 
-        public void RegisterListener(GameEventListenerBase<T> listener)
+        public IDisposable RegisterListener(GameEventListenerBase<T> listener)
         {
             _listeners.Add(listener);
+            return new Disposable(this, listener);
         }
 
         public void UnregisterListener(GameEventListenerBase<T> listener)
         {
             _listeners.Remove(listener);
+        }
+        private class Disposable : IDisposable
+        {
+            private readonly GameEventBase<T> EventInstance;
+            private readonly GameEventListenerBase<T> ListenerInstance;
+
+            public Disposable(GameEventBase<T> eventInstance, GameEventListenerBase<T> listenerInstance)
+            {
+                EventInstance = eventInstance;
+                ListenerInstance = listenerInstance;
+            }
+
+            public void Dispose()
+            {
+                EventInstance.UnregisterListener(ListenerInstance);
+            }
         }
     }
 }

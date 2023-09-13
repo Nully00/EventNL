@@ -9,7 +9,7 @@ namespace NL.Event
         [SerializeField]
         private string _saveKey;
         public string saveKey => _saveKey;
-        public T value;
+        public T value = default(T);
         public override void SetDefaultValues()
         {
             value = default(T);
