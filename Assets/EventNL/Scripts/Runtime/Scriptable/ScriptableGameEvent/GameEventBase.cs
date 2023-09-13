@@ -7,6 +7,7 @@ namespace NL.Event
     {
         public bool outputLog = false;
         private List<GameEventListenerBase<T>> _listeners = new List<GameEventListenerBase<T>>();
+        private List<Action<T>> _actions = new List<Action<T>>();
         public void Raise(T value)
         {
             if (outputLog)
@@ -17,8 +18,16 @@ namespace NL.Event
             {
                 _listeners[i].OnEventRaised(value);
             }
+            for (int i = 0; i < _actions.Count; i++)
+            {
+                _actions[i]?.Invoke(value);
+            }
         }
-
+        public IDisposable RegisterAction(Action<T> action)
+        {
+            _actions.Add(action);
+            return new DisposableAction(this, action);
+        }
         public IDisposable RegisterListener(GameEventListenerBase<T> listener)
         {
             _listeners.Add(listener);
@@ -28,6 +37,10 @@ namespace NL.Event
         public void UnregisterListener(GameEventListenerBase<T> listener)
         {
             _listeners.Remove(listener);
+        }
+        private void UnregisterAction(Action<T> action)
+        {
+            _actions.Remove(action);
         }
         private class Disposable : IDisposable
         {
@@ -43,6 +56,22 @@ namespace NL.Event
             public void Dispose()
             {
                 EventInstance.UnregisterListener(ListenerInstance);
+            }
+        }
+        private class DisposableAction : IDisposable
+        {
+            private readonly GameEventBase<T> EventInstance;
+            private readonly Action<T> ActionInstance;
+
+            public DisposableAction(GameEventBase<T> eventInstance, Action<T> actionInstance)
+            {
+                EventInstance = eventInstance;
+                ActionInstance = actionInstance;
+            }
+
+            public void Dispose()
+            {
+                EventInstance.UnregisterAction(ActionInstance);
             }
         }
     }
